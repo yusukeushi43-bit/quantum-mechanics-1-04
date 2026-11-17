@@ -4,22 +4,20 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#17181b">
-  <meta name="description" content="量子力学Ⅰ 第4回。不確定性原理の分布・仮想測定・課題。">
+  <meta name="description" content="量子力学Ⅰ 第4回。不確定性原理の分布・仮想測定・確認クイズ。">
   <title>量子力学Ⅰ 第4回｜不確定性原理</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%2324252a'/%3E%3Cpath d='M8 39 Q20 39 26 24 Q32 9 38 24 Q44 39 56 39' fill='none' stroke='%238d9aff' stroke-width='4'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="style.css">
   <script src="physics.js" defer></script>
   <script src="app.js" defer></script>
+  <script src="quiz-config.js" defer></script>
+  <script src="quiz.js" defer></script>
 </head>
 <body>
 <a class="skip" href="#main">本文へ移動</a>
 <header class="header">
   <a class="brand" href="#explore" aria-label="量子力学Ⅰ 第4回 ホーム"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M3 26c9 0 9-15 17-15s8 15 17 15"/><path d="M3 30h34"/></svg><span>量子力学Ⅰ<small>第4回</small></span></a>
-  <nav class="main-nav" aria-label="実験室のメニュー">
-    <button data-view="explore" class="active" aria-current="page">分布</button>
-    <button data-view="measure">測定</button>
-    <button data-view="lesson">授業計画</button>
-  </nav>
+
 
 </header>
 <main id="main">
@@ -27,6 +25,12 @@
   <div><h1>量子力学Ⅰ 第4回</h1><p class="hero-copy">不確定性原理</p></div>
   <div class="hero-formula" aria-label="位置の不確定性と運動量の不確定性の積は、エイチバーの2分の1以上"><div><span class="ink-x">Δx</span><span class="dot">·</span><span class="ink-p">Δpₓ</span><span class="ge">≥</span><span class="fraction"><b>ℏ</b><b>2</b></span></div><p>Δx・Δpₓ：標準偏差</p></div>
 </section>
+
+<nav class="main-nav" aria-label="画面を切り替える">
+    <button data-view="explore" class="active" aria-current="page"><span class="nav-icon" aria-hidden="true">∿</span><span class="nav-name">分布</span><small>条件を変える</small></button>
+    <button data-view="measure"><span class="nav-icon" aria-hidden="true">▥</span><span class="nav-name">測定</span><small>測って比べる</small></button>
+    <button data-view="quiz"><span class="nav-icon" aria-hidden="true">?</span><span class="nav-name">クイズ</span><small>予想と確認</small></button>
+  </nav>
 
 <section id="view-explore" class="view wrap" aria-label="分布をさわる">
   <div class="section-title"><div><span class="step">実験 01</span><h2>位置と運動量の分布</h2></div><span class="pill">スライダーで調整</span></div>
@@ -57,7 +61,7 @@
     <div class="readouts" aria-live="polite" aria-atomic="true"><div><p><i class="color-dot x"></i>位置の広がり</p><strong id="read-x">1.00</strong><span>Δx</span></div><div><p><i class="color-dot p"></i>運動量の広がり</p><strong id="read-p">0.50</strong><span>Δpₓ</span></div><div class="product"><p>ふたつの広がりの積</p><strong id="read-product">0.500</strong><span>Δx · Δpₓ / ℏ</span><b id="bound-label">下限 0.5 に一致</b></div></div>
   </div>
   <div class="observation"><span class="observation-label">観察</span><p id="observation-text">Δx を変え、Δpₓ と積の変化を確認する。</p></div>
-  <p class="unit-note">Δは標準偏差。pₓ は x 方向の運動量。グラフは高さではなく幅を比較する。位置は基準長さ L、運動量は ℏ/L を単位に表示しています（無次元化）。ℏ はプランク定数を 2π で割った定数です。</p>
+  <p class="unit-note">Δは標準偏差。pₓ は x 方向の運動量。不確定性は分布の幅（標準偏差）。面積が一定のため、分布が広がると山は低くなります。位置は基準長さ L、運動量は ℏ/L を単位に表示しています（無次元化）。ℏ はプランク定数を 2π で割った定数です。</p>
 
   <section class="missions" aria-labelledby="mission-title"><div class="section-title"><div><span class="step">予想・比較・説明</span><h2 id="mission-title">課題</h2></div></div><div class="mission-grid">
     <article class="mission"><span class="mission-number">01 / 予想</span><h3>Δx を半分にすると？</h3><p>C = 0 のとき、Δpₓ の変化を予想する。</p><div class="choice-group" id="prediction" role="group" aria-label="予想を選ぶ"><button data-answer="half" aria-pressed="false">半分</button><button data-answer="same" aria-pressed="false">同じ</button><button data-answer="double" aria-pressed="false">2倍</button></div><p id="prediction-status" class="feedback" aria-live="polite">予想を選び、操作して確認する。</p><button id="check-prediction" class="text-button" disabled>解説を見る</button></article>
@@ -70,7 +74,20 @@
 
 <section id="view-measure" class="view wrap" aria-label="仮想測定" hidden>
   <div class="section-title"><div><span class="step">実験 02</span><h2>位置と運動量の測定</h2></div><button class="text-button" data-view="explore">← 状態を変える</button></div>
-  <div class="measure-intro"><p><strong>毎回、同じ状態の粒子を用意して測定する。</strong><br>位置と運動量は別の粒子集団で測る。1個の粒子の同時測定ではない。</p><span id="measure-state" class="pill">Δx = 1.00 · Δpₓ = 0.50</span></div>
+  <section class="measurement-guide panel" aria-labelledby="measurement-guide-title">
+    <h3 id="measurement-guide-title">何を、どう測る？</h3>
+    <ol class="measurement-steps">
+      <li><span>1</span><div><strong>同じ状態を用意する</strong><p>位置の広がり Δx を決めます。測定するたびに、同じ状態の新しい粒子を用意します。</p></div></li>
+      <li><span>2</span><div><strong>1個ずつ値を読み取る</strong><p>一方の集団では位置、別の集団では運動量を測ります。「10回」なら、それぞれ10個の値が得られます。</p></div></li>
+      <li><span>3</span><div><strong>結果を棒グラフにする</strong><p>似た値をまとめ、出やすさを表示します。回数を増やして形を確かめ、各10,000回で理論曲線と比べます。</p></div></li>
+    </ol>
+    <details class="apparatus"><summary>実際の測定との対応</summary><p>位置は、検出器上の「どこで検出されたか」から読み取れます。運動量は、例えば自由に飛ばした粒子の飛行時間と移動距離から推定します（初期位置の広がりや装置の分解能も考慮します）。ここでは装置を理想化し、量子状態の確率分布に従って測定値を生成しています。</p><p>同じ1個の粒子の位置と運動量を、同時に正確に測る操作ではありません。</p></details>
+  </section>
+  <div class="measure-settings panel">
+    <div><label class="range-title" for="measure-sigma">位置の広がり <span class="math">Δx</span><output id="measure-sigma-output" for="measure-sigma">1.00</output></label><input id="measure-sigma" type="range" min="0.35" max="2.5" step="0.01" value="1"><div class="range-ends"><span>狭い</span><span>広い</span></div></div>
+    <div><div class="presets"><button data-sigma="0.5">狭くする</button><button data-sigma="1" class="selected">標準</button><button data-sigma="2">広くする</button></div><p class="small-note">条件を変えると測定をやり直します。</p></div>
+    <span id="measure-state" class="pill">Δx = 1.00 · Δpₓ = 0.50</span>
+  </div>
   <div class="measure-layout paired-measure">
     <div class="panel measure-controls batch-controls">
       <div class="batch-heading"><div><h3>測定</h3><p class="control-help">両方に同じ回数ずつ追加。</p></div><div class="sample-count"><span>各量の測定回数</span><strong id="sample-count">0<small> / 10,000 回</small></strong></div></div>
@@ -78,39 +95,47 @@
       <progress id="sample-progress" max="10000" value="0" aria-label="各量の測定回数（上限10,000回）"></progress>
       <p class="small-note" id="reveal-note" role="status">各10,000回で理論の正規分布を表示。</p>
     </div>
+    <div class="measurement-comparison">
+      <div><strong>縦軸・横軸は固定</strong><p>全確率は1（表示範囲の外も含む）。分布が広がるほど山が低くなる様子を比べられます。</p></div>
+      <button id="pin-samples" class="button secondary" disabled>この測定結果を残す</button><button id="clear-sample-pin" class="text-button" hidden>比較を消す</button>
+    </div>
+    <p id="sample-pin-status" class="small-note" hidden></p>
     <div class="histogram-grid">
       <article class="panel histogram-panel position-hist">
         <div class="control-heading"><h3><i class="color-dot x"></i> 位置の測定結果</h3><span class="pill" id="sample-last-x">まだ測定していません</span></div>
-        <div class="hist-legend"><span><i class="bar-key"></i> 測定結果（確率密度）</span><span class="theory-key" hidden>─ 理論の正規分布</span></div>
+        <div class="hist-legend"><span><i class="bar-key"></i> 測定結果（確率密度）</span><span class="theory-key" hidden>─ 理論の正規分布</span><span class="sample-pin-key" hidden>┄ 前の測定結果</span></div>
         <svg id="histogram-x" viewBox="0 0 700 290" role="img" aria-label="位置の測定結果のヒストグラム"></svg>
         <p id="sample-message-x" class="sample-message">まだ測定していません。</p>
         <div class="sample-stat-grid"><div><span>測定値の平均</span><strong id="sample-mean-x">—</strong></div><div><span>測定から求めた広がり sₓ</span><strong id="sample-sd-x">—</strong></div><div><span>理論の広がり Δx</span><strong id="theory-sd-x" class="awaiting-theory">10,000回で表示</strong></div></div>
       </article>
       <article class="panel histogram-panel momentum-hist">
         <div class="control-heading"><h3><i class="color-dot p"></i> 運動量の測定結果</h3><span class="pill" id="sample-last-p">まだ測定していません</span></div>
-        <div class="hist-legend"><span><i class="bar-key"></i> 測定結果（確率密度）</span><span class="theory-key" hidden>─ 理論の正規分布</span></div>
+        <div class="hist-legend"><span><i class="bar-key"></i> 測定結果（確率密度）</span><span class="theory-key" hidden>─ 理論の正規分布</span><span class="sample-pin-key" hidden>┄ 前の測定結果</span></div>
         <svg id="histogram-p" viewBox="0 0 700 290" role="img" aria-label="運動量の測定結果のヒストグラム"></svg>
         <p id="sample-message-p" class="sample-message">まだ測定していません。</p>
         <div class="sample-stat-grid"><div><span>測定値の平均</span><strong id="sample-mean-p">—</strong></div><div><span>測定から求めた広がり sₚ</span><strong id="sample-sd-p">—</strong></div><div><span>理論の広がり Δpₓ</span><strong id="theory-sd-p" class="awaiting-theory">10,000回で表示</strong></div></div>
       </article>
     </div>
   </div>
-  <div class="observation"><span class="observation-label">考察</span><p>測定回数による分布の変化を説明し、10,000回で表示される理論曲線と比較する。</p></div><div class="two-columns"><article class="explain-card"><h3>「ばらつき」と「推定の精度」</h3><p>測定回数を増やすと、分布の形や広がりの推定は安定していきます。でも、同じ状態の粒子がもつ分布そのものの広がり Δx・Δpₓ は変わりません。</p></article><article class="explain-card"><h3>有限回の測定には、揺らぎがある</h3><p>表示する s は標本標準偏差です。少数のデータでは理論値から外れます。別々の標本から求めた sₓsₚ が一時的に ℏ/2 を下回っても、不確定性原理の反例にはなりません。</p></article></div>
+  <div class="observation"><span class="observation-label">考察</span><p>まず標準の状態で測り、「この測定結果を残す」を押す。次に Δx を狭くして同じ回数測り、運動量の山の幅と高さを比べる。</p></div><div class="two-columns"><article class="explain-card"><h3>「ばらつき」と「推定の精度」</h3><p>測定回数を増やすと、分布の形や広がりの推定は安定していきます。でも、同じ状態の粒子がもつ分布そのものの広がり Δx・Δpₓ は変わりません。</p></article><article class="explain-card"><h3>有限回の測定には、揺らぎがある</h3><p>表示する s は標本標準偏差です。少数のデータでは理論値から外れます。別々の標本から求めた sₓsₚ が一時的に ℏ/2 を下回っても、不確定性原理の反例にはなりません。</p></article></div>
 </section>
 
-<section id="view-lesson" class="view wrap" aria-label="30分の授業ガイド" hidden>
-  <div class="section-title"><div><h2>授業計画（30分）</h2></div><button id="print-guide" class="button secondary">授業計画を印刷 ↓</button></div>
-  <div class="lesson-lead panel"><span class="big-30">30<small>min</small></span><div><h3>学習目標</h3><p>不確定性関係をグラフから読み取り、位置の分布から運動量の分布を予想し、異なる条件を比較する。</p><p class="small-note">準備：グループに1台のスマホまたはPC</p></div></div>
-  <div class="timeline">
-    <article><span>00–05<small>5分</small></span><div><h3>分布と不確定性の復習</h3><p>位置と運動量、確率分布、標準偏差を確認する。グラフの中心と幅を区別する。</p></div><span class="activity-label">説明</span></article>
-    <article><span>05–17<small>12分</small></span><div><h3>予想とシミュレーション</h3><p>Δx を小さくしたときの Δpₓ を予想し、分布を操作して確認する。位置と運動量を測定し、各10,000回で理論曲線と比較する。</p></div><span class="activity-label">個人・ペア／グループ</span></article>
-    <article><span>17–30<small>13分</small></span><div><h3>不確定性関係と確認問題</h3><p>観察した分布の幅を不確定性関係で説明する。条件の異なる分布を比較し、確認問題に答える。</p></div><span class="activity-label">説明・個人</span></article>
-  </div>
-  <section class="quiz panel"><h3>測定回数を増やすと、不確定性はなくなる？</h3><div id="quiz-options" class="quiz-options"><button data-quiz="a" aria-pressed="false">A. なくなる。測定の平均が正確になるから。</button><button data-quiz="b" aria-pressed="false">B. なくならない。同じ状態の分布の広がりは変わらないから。</button><button data-quiz="c" aria-pressed="false">C. 測定器の性能だけで決まる。</button></div><p id="quiz-feedback" class="feedback" aria-live="polite">選択肢を選び、理由を説明する。</p></section>
-  <details class="teacher-notes panel"><summary>教員用：解説・つまずきやすい点</summary><div class="two-columns"><div><h3>3条件の答え（C = 0）</h3><p>Δx が 0.50 → 1.00 → 2.00 のとき、Δpₓ は 1.00 → 0.50 → 0.25。積はすべて 0.50 ℏ。p₀ を動かしても Δpₓ は変わりません。</p><h3>誤解を避ける言い方</h3><p>ここでの不確定性関係は、同じ量子状態について位置と運動量の分布がどれだけ広がるかという制約です。測定器の誤差や「測定で粒子を乱した量」そのものを表す式ではありません。</p></div><div><h3>このシミュレーションの限界</h3><p>1次元のガウス波束というモデルの予測を体験します。自然界での実験的検証そのものではありません。あらゆる状態をこの操作で作れるわけではなく、一般的な証明には演算子の数学が必要です。</p><h3>スリット実験を使う場合</h3><p>「狭いスリットほど回折が広がる」は導入に役立ちます。ただし理想的な矩形スリットの sinc² 分布は、運動量の分散が発散します。回折の中央ピーク幅をそのまま Δpₓ と呼ばないようにします。</p></div></div></details>
+<section id="view-quiz" class="view wrap" aria-label="確認クイズ" hidden>
+  <div class="section-title"><div><h2>確認クイズ</h2></div><span class="pill">3問</span></div>
+  <p class="quiz-lead">実験前は予想で、実験後は観察したことをもとに答えてください。</p>
+  <form id="class-quiz" class="class-quiz" aria-describedby="quiz-privacy">
+    <div class="quiz-settings panel"><label>授業コード<input id="class-code" name="classCode" maxlength="32" pattern="[A-Za-z0-9_-]{1,32}" value="QM1-04" required autocomplete="off"></label><fieldset class="phase-selector"><legend>回答するタイミング</legend><label><input type="radio" name="phase" value="before" checked>実験前</label><label><input type="radio" name="phase" value="after">実験後</label></fieldset></div>
+    <fieldset class="question panel"><legend><span>01</span>位置の広がり Δx を半分にすると？</legend><p>位相の曲がり C = 0 の状態で、運動量の広がり Δpₓ はどうなるでしょう。</p><label><input type="radio" name="q1" value="a" required><span>半分になる</span></label><label><input type="radio" name="q1" value="b"><span>変わらない</span></label><label><input type="radio" name="q1" value="c"><span>2倍になる</span></label></fieldset>
+    <fieldset class="question panel"><legend><span>02</span>同じ状態の粒子を、より多く測定すると？</legend><p>1回ごとの測定結果が従う分布の広がりについて選んでください。</p><label><input type="radio" name="q2" value="a" required><span>測定回数に応じて小さくなる</span></label><label><input type="radio" name="q2" value="b"><span>広がりは変わらず、分布の形がはっきりしてくる</span></label><label><input type="radio" name="q2" value="c"><span>十分に測れば、すべて同じ値になる</span></label></fieldset>
+    <fieldset class="question panel"><legend><span>03</span>運動量の分布が広がると、山の高さは？</legend><p>正規分布を、同じ縦軸・横軸の尺度で比較します。</p><label><input type="radio" name="q3" value="a" required><span>山は低くなり、分布全体の面積は変わらない</span></label><label><input type="radio" name="q3" value="b"><span>山の高さも、分布全体の面積も大きくなる</span></label><label><input type="radio" name="q3" value="c"><span>山の高さは変わらず、分布全体の面積が大きくなる</span></label></fieldset>
+    <p id="quiz-privacy" class="small-note">氏名・学籍番号は不要です。回答・回答時刻・匿名の識別番号を教員用の集計に送ります。実験前後は同じ端末・ブラウザで回答してください。1台を複数人で共用する場合は、グループの回答として集計します。</p>
+    <div class="quiz-submit"><button id="submit-quiz" type="submit" class="button primary">回答を送信する</button><p id="submission-status" role="status" aria-live="polite"></p></div>
+    <p class="small-note">同じ授業コード・タイミングで再送信すると、最後の回答に更新します。</p>
+  </form>
+  <section id="quiz-explanation" class="panel" hidden><h3>解説</h3><p><strong>01：2倍。</strong>C = 0 では ΔxΔpₓ = ℏ/2。片方を半分にすると、もう片方は2倍になります。</p><p><strong>02：広がりは変わりません。</strong>測定回数を増やすと分布の推定は安定しますが、量子状態そのものの広がりは変わりません。</p><p><strong>03：山は低くなり、面積は一定。</strong>全確率が1なので、正規分布は横に広がるほど縦に低くなります。</p></section>
 </section>
 
-<section class="model wrap"><details><summary>モデル・数式・参考資料 <span>＋</span></summary><div class="model-content"><h3>この実験室が計算しているもの</h3><p>位置の中心 x₀ = 0 の1次元ガウス波束を扱います。q = x/L、k = pₓL/ℏ とし、画面上の σ = Δx/L、μ = p₀L/ℏ は無次元の数値です。</p><div class="equation">ψ(q) = (2πσ²)<sup>−1/4</sup> exp[−(1 − iC)q² / (4σ²) + iμq]</div><p>位置の確率密度は平均 0・標準偏差 σ の正規分布、運動量の確率密度は平均 μ・標準偏差 √(1 + C²)/(2σ) の正規分布になります。このため ΔxΔpₓ/ℏ = √(1 + C²)/2 ≥ 1/2。C = 0 のときに最小値をとります。グラフは波動関数そのものではなく、その絶対値の2乗（確率密度）です。</p><p>仮想測定はこの確率分布から独立に乱数を生成しています。グラフは有限の範囲を表示しますが、分布は無限に続きます。標本標準偏差は分母 n − 1 で計算し、範囲外の測定値も含めます。</p><ul><li><a href="https://quantummechanics.ucsd.edu/ph130a/130_notes/node81.html" target="_blank" rel="noopener noreferrer">UC San Diego / Jim Branson — The Heisenberg Uncertainty Principle ↗</a></li><li><a href="https://arxiv.org/abs/quant-ph/0511073" target="_blank" rel="noopener noreferrer">Sang Pyo Kim — General Gaussian Wave Packets（位相の曲がりを含む状態）↗</a></li><li><a href="https://hanyu-builder.github.io/luminouslearner-international/science/physics/heisenberg-uncertainty-principle-simulator.html" target="_blank" rel="noopener noreferrer">着想の参考：Heisenberg Uncertainty Simulator ↗</a></li></ul><p class="small-note">記録・予想・メモはこのブラウザ内だけに保存されます。氏名や学籍番号の入力は不要です。仮想測定のデータはページを開いている間だけ保持されます。</p></div></details></section>
+<section class="model wrap"><details><summary>モデル・数式・参考資料 <span>＋</span></summary><div class="model-content"><h3>この実験室が計算しているもの</h3><p>位置の中心 x₀ = 0 の1次元ガウス波束を扱います。q = x/L、k = pₓL/ℏ とし、画面上の σ = Δx/L、μ = p₀L/ℏ は無次元の数値です。</p><div class="equation">ψ(q) = (2πσ²)<sup>−1/4</sup> exp[−(1 − iC)q² / (4σ²) + iμq]</div><p>位置の確率密度は平均 0・標準偏差 σ の正規分布、運動量の確率密度は平均 μ・標準偏差 √(1 + C²)/(2σ) の正規分布になります。このため ΔxΔpₓ/ℏ = √(1 + C²)/2 ≥ 1/2。C = 0 のときに最小値をとります。グラフは波動関数そのものではなく、その絶対値の2乗（確率密度）です。</p><p>仮想測定はこの確率分布から独立に乱数を生成しています。グラフは有限の範囲を表示しますが、分布は無限に続きます。標本標準偏差は分母 n − 1 で計算し、範囲外の測定値も含めます。</p><ul><li><a href="https://quantummechanics.ucsd.edu/ph130a/130_notes/node81.html" target="_blank" rel="noopener noreferrer">UC San Diego / Jim Branson — The Heisenberg Uncertainty Principle ↗</a></li><li><a href="https://arxiv.org/abs/quant-ph/0511073" target="_blank" rel="noopener noreferrer">Sang Pyo Kim — General Gaussian Wave Packets（位相の曲がりを含む状態）↗</a></li><li><a href="https://hanyu-builder.github.io/luminouslearner-international/science/physics/heisenberg-uncertainty-principle-simulator.html" target="_blank" rel="noopener noreferrer">着想の参考：Heisenberg Uncertainty Simulator ↗</a></li></ul><p class="small-note">条件記録・予想・メモはこのブラウザ内だけに保存されます。確認クイズで送信した回答は教員専用の集計に保存します。氏名や学籍番号の入力は不要です。仮想測定のデータはページを開いている間だけ保持されます。</p></div></details></section>
 </main>
 <footer class="footer wrap"><p>量子力学Ⅰ 第4回 · 不確定性原理</p></footer>
 <div class="mobile-dock" id="mobile-dock" hidden><label for="mobile-sigma">位置の広がり Δx<output id="mobile-output" for="mobile-sigma">1.00</output></label><input id="mobile-sigma" type="range" min="0.35" max="2.5" step="0.01" value="1" aria-label="位置の広がりを調整"></div>
