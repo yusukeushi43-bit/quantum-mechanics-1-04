@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#17181b">
+  <meta name="description" content="量子力学Ⅰ 第4回。不確定性原理の分布・仮想測定・課題。">
+  <title>量子力学Ⅰ 第4回｜不確定性原理</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%2324252a'/%3E%3Cpath d='M8 39 Q20 39 26 24 Q32 9 38 24 Q44 39 56 39' fill='none' stroke='%238d9aff' stroke-width='4'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+  <script src="physics.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">本文へ移動</a>
+<header class="header">
+  <a class="brand" href="#explore" aria-label="量子力学Ⅰ 第4回 ホーム"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M3 26c9 0 9-15 17-15s8 15 17 15"/><path d="M3 30h34"/></svg><span>量子力学Ⅰ<small>第4回</small></span></a>
+  <nav class="main-nav" aria-label="実験室のメニュー">
+    <button data-view="explore" class="active" aria-current="page">分布</button>
+    <button data-view="measure">測定</button>
+    <button data-view="lesson">授業計画</button>
+  </nav>
+
+</header>
+<main id="main">
+<section class="hero wrap">
+  <div><h1>量子力学Ⅰ 第4回</h1><p class="hero-copy">不確定性原理</p></div>
+  <div class="hero-formula" aria-label="位置の不確定性と運動量の不確定性の積は、エイチバーの2分の1以上"><div><span class="ink-x">Δx</span><span class="dot">·</span><span class="ink-p">Δpₓ</span><span class="ge">≥</span><span class="fraction"><b>ℏ</b><b>2</b></span></div><p>Δx・Δpₓ：標準偏差</p></div>
+</section>
+
+<section id="view-explore" class="view wrap" aria-label="分布をさわる">
+  <div class="section-title"><div><span class="step">実験 01</span><h2>位置と運動量の分布</h2></div><span class="pill">スライダーで調整</span></div>
+  <div class="lab-layout">
+    <aside class="controls panel">
+      <div class="control-heading"><h3>条件</h3><button id="reset-state" class="text-button">初期値に戻す ↺</button></div>
+      <label class="range-title" for="sigma">位置の広がり <span class="math">Δx</span><output id="sigma-output" for="sigma">1.00</output></label>
+      <p class="control-help">小さくすると、位置が狭い範囲に集中します。</p>
+      <input type="range" id="sigma" min="0.35" max="2.5" step="0.01" value="1" aria-describedby="sigma-help">
+      <div id="sigma-help" class="range-ends"><span>狭い</span><span>広い</span></div>
+      <div class="presets" aria-label="位置の広がりのプリセット"><button data-sigma="0.5">狭くする</button><button data-sigma="1" class="selected">標準</button><button data-sigma="2">広くする</button></div>
+      <div class="control-divider"></div>
+      <label class="range-title" for="mean">運動量の中心 <span class="math">p₀</span><output id="mean-output" for="mean">0.00</output></label>
+      <p class="control-help">中心を動かすと、広がりも変わる？</p>
+      <input type="range" id="mean" min="-2" max="2" step="0.05" value="0">
+      <div class="range-ends"><span>−2</span><span>0</span><span>+2</span></div>
+      <details class="advanced"><summary>もう一歩：等号でない状態</summary><p>波の位相に曲がりを加えると、位置の分布を保ったまま運動量の分布が広がります。</p><label class="range-title" for="chirp">位相の曲がり <span class="math">C</span><output id="chirp-output" for="chirp">0.00</output></label><input type="range" id="chirp" min="0" max="2" step="0.05" value="0"><div class="range-ends"><span>0：最小の積</span><span>2</span></div></details>
+      <button id="pin-state" class="button secondary full"><span>＋</span> 今の分布を比較用に残す</button>
+      <button id="clear-pin" class="text-button full" hidden>比較の破線を消す</button>
+      <p class="small-note">設定を変えると仮想測定をやり直します。<br>記録した条件は残ります。</p>
+    </aside>
+    <div class="graph-panel">
+      <div class="graph-toolbar"><span class="live-dot"></span><span>確率の分布</span><span class="graph-key"><i></i> 理論値 <span id="pin-legend" hidden> · 破線：比較</span></span></div>
+      <div class="plot-section"><div class="plot-title"><span class="color-dot x"></span><h3>位置</h3><span class="plot-symbol">|ψ(x)|²</span></div><svg id="position-plot" viewBox="0 0 620 184" role="img" aria-label="位置の確率密度グラフ"></svg></div>
+      <div class="plot-section momentum"><div class="plot-title"><span class="color-dot p"></span><h3>運動量</h3><span class="plot-symbol">|φ(pₓ)|²</span></div><svg id="momentum-plot" viewBox="0 0 620 184" role="img" aria-label="運動量の確率密度グラフ"></svg></div>
+      <div class="graph-foot"><span>色の帯：中心 ± 1標準偏差（約68%）</span><span>横軸・縦軸の尺度は固定</span></div>
+    </div>
+    <div class="readouts" aria-live="polite" aria-atomic="true"><div><p><i class="color-dot x"></i>位置の広がり</p><strong id="read-x">1.00</strong><span>Δx</span></div><div><p><i class="color-dot p"></i>運動量の広がり</p><strong id="read-p">0.50</strong><span>Δpₓ</span></div><div class="product"><p>ふたつの広がりの積</p><strong id="read-product">0.500</strong><span>Δx · Δpₓ / ℏ</span><b id="bound-label">下限 0.5 に一致</b></div></div>
+  </div>
+  <div class="observation"><span class="observation-label">観察</span><p id="observation-text">Δx を変え、Δpₓ と積の変化を確認する。</p></div>
+  <p class="unit-note">Δは標準偏差。pₓ は x 方向の運動量。グラフは高さではなく幅を比較する。位置は基準長さ L、運動量は ℏ/L を単位に表示しています（無次元化）。ℏ はプランク定数を 2π で割った定数です。</p>
+
+  <section class="missions" aria-labelledby="mission-title"><div class="section-title"><div><span class="step">予想・比較・説明</span><h2 id="mission-title">課題</h2></div></div><div class="mission-grid">
+    <article class="mission"><span class="mission-number">01 / 予想</span><h3>Δx を半分にすると？</h3><p>C = 0 のとき、Δpₓ の変化を予想する。</p><div class="choice-group" id="prediction" role="group" aria-label="予想を選ぶ"><button data-answer="half" aria-pressed="false">半分</button><button data-answer="same" aria-pressed="false">同じ</button><button data-answer="double" aria-pressed="false">2倍</button></div><p id="prediction-status" class="feedback" aria-live="polite">予想を選び、操作して確認する。</p><button id="check-prediction" class="text-button" disabled>解説を見る</button></article>
+    <article class="mission"><span class="mission-number">02 / 比較</span><h3>Δx と Δpₓ を同時に小さくできるか</h3><p>Δx と Δpₓ を両方 0.50 未満にできるか調べる。条件を3つ記録して比較する。</p><button id="record-state" class="button secondary full">今の条件を記録する ＋</button><p id="record-status" class="feedback" aria-live="polite">記録はこの端末のブラウザに保存されます。</p></article>
+    <article class="mission"><span class="mission-number">03 / 説明</span><h3>中心と広がり</h3><p>p₀ を変え、Δpₓ と積を確認する。変化した量を説明する。</p><label class="sr-only" for="reflection">気づいたこと</label><textarea id="reflection" rows="2" placeholder="観察したことを記入"></textarea><span class="small-note">入力はこの端末に自動保存。外部への送信はありません。</span></article>
+  </div></section>
+  <section class="records panel"><div class="control-heading"><div><h3>記録</h3></div><div class="record-actions"><button id="download-csv" class="text-button" disabled>CSVを保存 ↓</button><button id="clear-records" class="text-button" disabled>記録を消す</button></div></div><div class="table-scroll"><table><caption class="sr-only">記録した状態の理論値</caption><thead><tr><th>条件</th><th>Δx</th><th>Δpₓ</th><th>p₀</th><th>C</th><th>積 / ℏ</th><th>再現</th></tr></thead><tbody id="records-body"><tr><td colspan="7" class="empty">記録はありません。</td></tr></tbody></table></div></section>
+  <div class="next-step"><button class="button primary" data-view="measure">測定へ <span>→</span></button></div>
+</section>
+
+<section id="view-measure" class="view wrap" aria-label="仮想測定" hidden>
+  <div class="section-title"><div><span class="step">実験 02</span><h2>位置と運動量の測定</h2></div><button class="text-button" data-view="explore">← 状態を変える</button></div>
+  <div class="measure-intro"><p><strong>毎回、同じ状態の粒子を用意して測定する。</strong><br>位置と運動量は別の粒子集団で測る。1個の粒子の同時測定ではない。</p><span id="measure-state" class="pill">Δx = 1.00 · Δpₓ = 0.50</span></div>
+  <div class="measure-layout paired-measure">
+    <div class="panel measure-controls batch-controls">
+      <div class="batch-heading"><div><h3>測定</h3><p class="control-help">両方に同じ回数ずつ追加。</p></div><div class="sample-count"><span>各量の測定回数</span><strong id="sample-count">0<small> / 10,000 回</small></strong></div></div>
+      <div class="batch-actions"><button id="sample-one" class="button primary">1回 測る ＋</button><button id="sample-ten" class="button secondary">10回 測る ＋</button><button id="sample-hundred" class="button secondary">100回 測る ＋</button><button id="sample-thousand" class="button secondary">1000回 測る ＋</button><button id="reset-samples" class="text-button">両方をリセット ↺</button></div>
+      <progress id="sample-progress" max="10000" value="0" aria-label="各量の測定回数（上限10,000回）"></progress>
+      <p class="small-note" id="reveal-note" role="status">各10,000回で理論の正規分布を表示。</p>
+    </div>
+    <div class="histogram-grid">
+      <article class="panel histogram-panel position-hist">
+        <div class="control-heading"><h3><i class="color-dot x"></i> 位置の測定結果</h3><span class="pill" id="sample-last-x">まだ測定していません</span></div>
+        <div class="hist-legend"><span><i class="bar-key"></i> 測定結果（確率密度）</span><span class="theory-key" hidden>─ 理論の正規分布</span></div>
+        <svg id="histogram-x" viewBox="0 0 700 290" role="img" aria-label="位置の測定結果のヒストグラム"></svg>
+        <p id="sample-message-x" class="sample-message">まだ測定していません。</p>
+        <div class="sample-stat-grid"><div><span>測定値の平均</span><strong id="sample-mean-x">—</strong></div><div><span>測定から求めた広がり sₓ</span><strong id="sample-sd-x">—</strong></div><div><span>理論の広がり Δx</span><strong id="theory-sd-x" class="awaiting-theory">10,000回で表示</strong></div></div>
+      </article>
+      <article class="panel histogram-panel momentum-hist">
+        <div class="control-heading"><h3><i class="color-dot p"></i> 運動量の測定結果</h3><span class="pill" id="sample-last-p">まだ測定していません</span></div>
+        <div class="hist-legend"><span><i class="bar-key"></i> 測定結果（確率密度）</span><span class="theory-key" hidden>─ 理論の正規分布</span></div>
+        <svg id="histogram-p" viewBox="0 0 700 290" role="img" aria-label="運動量の測定結果のヒストグラム"></svg>
+        <p id="sample-message-p" class="sample-message">まだ測定していません。</p>
+        <div class="sample-stat-grid"><div><span>測定値の平均</span><strong id="sample-mean-p">—</strong></div><div><span>測定から求めた広がり sₚ</span><strong id="sample-sd-p">—</strong></div><div><span>理論の広がり Δpₓ</span><strong id="theory-sd-p" class="awaiting-theory">10,000回で表示</strong></div></div>
+      </article>
+    </div>
+  </div>
+  <div class="observation"><span class="observation-label">考察</span><p>測定回数による分布の変化を説明し、10,000回で表示される理論曲線と比較する。</p></div><div class="two-columns"><article class="explain-card"><h3>「ばらつき」と「推定の精度」</h3><p>測定回数を増やすと、分布の形や広がりの推定は安定していきます。でも、同じ状態の粒子がもつ分布そのものの広がり Δx・Δpₓ は変わりません。</p></article><article class="explain-card"><h3>有限回の測定には、揺らぎがある</h3><p>表示する s は標本標準偏差です。少数のデータでは理論値から外れます。別々の標本から求めた sₓsₚ が一時的に ℏ/2 を下回っても、不確定性原理の反例にはなりません。</p></article></div>
+</section>
+
+<section id="view-lesson" class="view wrap" aria-label="30分の授業ガイド" hidden>
+  <div class="section-title"><div><h2>授業計画（30分）</h2></div><button id="print-guide" class="button secondary">授業計画を印刷 ↓</button></div>
+  <div class="lesson-lead panel"><span class="big-30">30<small>min</small></span><div><h3>学習目標</h3><p>不確定性関係をグラフから読み取り、位置の分布から運動量の分布を予想し、異なる条件を比較する。</p><p class="small-note">準備：グループに1台のスマホまたはPC</p></div></div>
+  <div class="timeline">
+    <article><span>00–05<small>5分</small></span><div><h3>分布と不確定性の復習</h3><p>位置と運動量、確率分布、標準偏差を確認する。グラフの中心と幅を区別する。</p></div><span class="activity-label">説明</span></article>
+    <article><span>05–17<small>12分</small></span><div><h3>予想とシミュレーション</h3><p>Δx を小さくしたときの Δpₓ を予想し、分布を操作して確認する。位置と運動量を測定し、各10,000回で理論曲線と比較する。</p></div><span class="activity-label">個人・ペア／グループ</span></article>
+    <article><span>17–30<small>13分</small></span><div><h3>不確定性関係と確認問題</h3><p>観察した分布の幅を不確定性関係で説明する。条件の異なる分布を比較し、確認問題に答える。</p></div><span class="activity-label">説明・個人</span></article>
+  </div>
+  <section class="quiz panel"><h3>測定回数を増やすと、不確定性はなくなる？</h3><div id="quiz-options" class="quiz-options"><button data-quiz="a" aria-pressed="false">A. なくなる。測定の平均が正確になるから。</button><button data-quiz="b" aria-pressed="false">B. なくならない。同じ状態の分布の広がりは変わらないから。</button><button data-quiz="c" aria-pressed="false">C. 測定器の性能だけで決まる。</button></div><p id="quiz-feedback" class="feedback" aria-live="polite">選択肢を選び、理由を説明する。</p></section>
+  <details class="teacher-notes panel"><summary>教員用：解説・つまずきやすい点</summary><div class="two-columns"><div><h3>3条件の答え（C = 0）</h3><p>Δx が 0.50 → 1.00 → 2.00 のとき、Δpₓ は 1.00 → 0.50 → 0.25。積はすべて 0.50 ℏ。p₀ を動かしても Δpₓ は変わりません。</p><h3>誤解を避ける言い方</h3><p>ここでの不確定性関係は、同じ量子状態について位置と運動量の分布がどれだけ広がるかという制約です。測定器の誤差や「測定で粒子を乱した量」そのものを表す式ではありません。</p></div><div><h3>このシミュレーションの限界</h3><p>1次元のガウス波束というモデルの予測を体験します。自然界での実験的検証そのものではありません。あらゆる状態をこの操作で作れるわけではなく、一般的な証明には演算子の数学が必要です。</p><h3>スリット実験を使う場合</h3><p>「狭いスリットほど回折が広がる」は導入に役立ちます。ただし理想的な矩形スリットの sinc² 分布は、運動量の分散が発散します。回折の中央ピーク幅をそのまま Δpₓ と呼ばないようにします。</p></div></div></details>
+</section>
+
+<section class="model wrap"><details><summary>モデル・数式・参考資料 <span>＋</span></summary><div class="model-content"><h3>この実験室が計算しているもの</h3><p>位置の中心 x₀ = 0 の1次元ガウス波束を扱います。q = x/L、k = pₓL/ℏ とし、画面上の σ = Δx/L、μ = p₀L/ℏ は無次元の数値です。</p><div class="equation">ψ(q) = (2πσ²)<sup>−1/4</sup> exp[−(1 − iC)q² / (4σ²) + iμq]</div><p>位置の確率密度は平均 0・標準偏差 σ の正規分布、運動量の確率密度は平均 μ・標準偏差 √(1 + C²)/(2σ) の正規分布になります。このため ΔxΔpₓ/ℏ = √(1 + C²)/2 ≥ 1/2。C = 0 のときに最小値をとります。グラフは波動関数そのものではなく、その絶対値の2乗（確率密度）です。</p><p>仮想測定はこの確率分布から独立に乱数を生成しています。グラフは有限の範囲を表示しますが、分布は無限に続きます。標本標準偏差は分母 n − 1 で計算し、範囲外の測定値も含めます。</p><ul><li><a href="https://quantummechanics.ucsd.edu/ph130a/130_notes/node81.html" target="_blank" rel="noopener noreferrer">UC San Diego / Jim Branson — The Heisenberg Uncertainty Principle ↗</a></li><li><a href="https://arxiv.org/abs/quant-ph/0511073" target="_blank" rel="noopener noreferrer">Sang Pyo Kim — General Gaussian Wave Packets（位相の曲がりを含む状態）↗</a></li><li><a href="https://hanyu-builder.github.io/luminouslearner-international/science/physics/heisenberg-uncertainty-principle-simulator.html" target="_blank" rel="noopener noreferrer">着想の参考：Heisenberg Uncertainty Simulator ↗</a></li></ul><p class="small-note">記録・予想・メモはこのブラウザ内だけに保存されます。氏名や学籍番号の入力は不要です。仮想測定のデータはページを開いている間だけ保持されます。</p></div></details></section>
+</main>
+<footer class="footer wrap"><p>量子力学Ⅰ 第4回 · 不確定性原理</p></footer>
+<div class="mobile-dock" id="mobile-dock" hidden><label for="mobile-sigma">位置の広がり Δx<output id="mobile-output" for="mobile-sigma">1.00</output></label><input id="mobile-sigma" type="range" min="0.35" max="2.5" step="0.01" value="1" aria-label="位置の広がりを調整"></div>
+<div id="measure-dock" class="measure-dock" hidden><span id="dock-count">各 0 回</span><div><button data-measure-count="1">＋1回</button><button data-measure-count="10">＋10回</button><button data-measure-count="100">＋100回</button><button data-measure-count="1000">＋1000回</button></div></div>
+<div id="toast" class="toast" role="status" hidden></div>
+<noscript><p class="wrap">シミュレーションを操作するには、ブラウザのJavaScriptを有効にしてください。</p></noscript>
+</body>
+</html>
