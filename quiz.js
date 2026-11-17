@@ -16,7 +16,7 @@
     const answers=stored.drafts[currentKey()]||[];
     ['q1','q2','q3'].forEach((name,i)=>{for(const field of form.elements[name])field.checked=field.value===answers[i];});
     const receipt=stored.receipts[currentKey()];
-    status.textContent=receipt?'このタイミングの回答は送信済みです。再送信すると更新します。':'';
+    status.textContent=receipt?'送信済み':'';
     button.textContent=receipt?'回答を更新する':'回答を送信する';
     if(!config.endpoint){button.disabled=true;status.textContent='集計の接続を準備しています。回答の送信はまだできません。';}
   }
@@ -39,7 +39,7 @@
       const receipt=await response.json();
       if(receipt.ok!==true||receipt.submission!==payload.submission)throw new Error(receipt.error||'unconfirmed');
       stored.receipts[payload.classCode+'/'+payload.phase]=receipt.receivedAt;stored.pending=null;save();
-      status.textContent=payload.phase==='before'?'送信しました。シミュレーションのあとに「実験後」で回答してください。':'送信しました。回答を教員用の集計に保存しました。';
+      status.textContent='送信しました。';
       button.textContent='回答を更新する';
       document.getElementById('quiz-explanation').hidden=payload.phase!=='after';
     }catch(error){

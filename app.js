@@ -53,21 +53,14 @@
     plot('position-plot',0,state.sigma,'#8d9aff',1.2,pin?{mean:0,sd:pin.sigma}:null,'位置','Δx');
     plot('momentum-plot',state.mean,sp,'#ff8e96',2.1,pin?{mean:pin.mean,sd:P.momentumSD(pin.sigma,pin.chirp)}:null,'運動量','Δpₓ');
     $('pin-legend').hidden=!pin;$('clear-pin').hidden=!pin;
-    $('pin-state').textContent=pin?'比較用の分布を今の状態に更新':'＋ 今の分布を比較用に残す';
-    let message;
-    if(state.chirp>0)message=`位相の曲がり C = ${fmt(state.chirp)}。積は ${fmt(product,3)} ℏ で、下限の 0.5 ℏ より大きくなりました。不確定性原理は「等号」だけでなく「以上」です。`;
-    else if(Math.abs(state.mean)>.01)message=`運動量の中心は ${fmt(state.mean)} に移りました。中心を動かしても、広がり Δpₓ = ${fmt(sp)} と積 0.500 ℏ は変わりません。`;
-    else if(state.sigma<.95)message=`位置の分布が狭まり（Δx = ${fmt(state.sigma)}）、運動量の分布が広がりました（Δpₓ = ${fmt(sp)}）。片方を狭めると、もう片方は広がります。`;
-    else if(state.sigma>1.05)message=`位置の分布が広がり（Δx = ${fmt(state.sigma)}）、運動量の分布が狭まりました（Δpₓ = ${fmt(sp)}）。この状態では、ふたつの広がりの積は一定です。`;
-    else message='Δx を変え、Δpₓ と積の変化を確認する。';
-    $('observation-text').textContent=message;
+    $('pin-state').textContent=pin?'比較を今の分布に更新':'＋ 今の分布を残す';
     $('measure-state').textContent=`Δx = ${fmt(state.sigma)} · Δpₓ = ${fmt(sp)} · p₀ = ${fmt(state.mean)}`;
     updateHistogram();
   }
   [['measure-sigma','sigma'],['sigma','sigma'],['mobile-sigma','sigma'],['mean','mean'],['chirp','chirp']].forEach(([id,key])=>$(id).addEventListener('input',e=>{state[key]=+e.target.value;updateState();}));
   document.querySelectorAll('[data-sigma]').forEach(b=>b.addEventListener('click',()=>{state.sigma=+b.dataset.sigma;updateState();}));
-  $('reset-state').addEventListener('click',()=>{Object.assign(state,{sigma:1,mean:0,chirp:0});pin=null;updateState();toast('初期状態に戻しました。実験ノートは残ります。');});
-  $('pin-state').addEventListener('click',()=>{pin={...state};updateState(false);toast('今の分布を破線で残しました。スライダーで比べてみよう。');});
+  $('reset-state').addEventListener('click',()=>{Object.assign(state,{sigma:1,mean:0,chirp:0});pin=null;updateState();toast('初期値に戻しました。');});
+  $('pin-state').addEventListener('click',()=>{pin={...state};updateState(false);toast('分布を比較用に残しました。');});
   $('clear-pin').addEventListener('click',()=>{pin=null;updateState(false);});
   function view(name,scroll=true){
     if(!['explore','measure','quiz'].includes(name))name='explore';
@@ -79,9 +72,6 @@
   }
   document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>view(b.dataset.view)));
   window.addEventListener('hashchange',()=>view(location.hash.slice(1),false));
-  function renderPrediction(){document.querySelectorAll('[data-answer]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.answer===saved.prediction)));$('check-prediction').disabled=!saved.prediction;}
-  document.querySelectorAll('[data-answer]').forEach(b=>b.addEventListener('click',()=>{saved.prediction=b.dataset.answer;persist();renderPrediction();$('prediction-status').textContent=`「${b.textContent}」と予想しました。Δx = 1.00 と 0.50 を比べよう。`;}));
-  $('check-prediction').addEventListener('click',()=>{$('prediction-status').textContent=(saved.prediction==='double'?'正解。 ':'観察結果と比較してください。 ')+'C = 0 では Δpₓ = 1/(2Δx)。Δx が 1.00 → 0.50 になると、Δpₓ は 0.50 → 1.00（2倍）です。';});
   $('reflection').value=saved.reflection;
   $('reflection').addEventListener('input',e=>{saved.reflection=e.target.value;persist();});
   function renderRecords(){
@@ -90,7 +80,7 @@
     saved.records.forEach((s,i)=>{const row=document.createElement('tr');const sp=P.momentumSD(s.sigma,s.chirp);[`${i+1}`,fmt(s.sigma),fmt(sp,3),fmt(s.mean),fmt(s.chirp),fmt(s.sigma*sp,3)].forEach(value=>{const td=document.createElement('td');td.textContent=value;row.append(td);});const td=document.createElement('td'),button=document.createElement('button');button.className='text-button';button.textContent='再現 ↗';button.setAttribute('aria-label',`条件${i+1}を再現`);button.addEventListener('click',()=>{Object.assign(state,s);updateState();$('view-explore').scrollIntoView({behavior:'smooth'});toast(`条件 ${i+1} を再現しました。`);});td.append(button);row.append(td);body.append(row);});
     $('download-csv').disabled=!saved.records.length;$('clear-records').disabled=!saved.records.length;
   }
-  $('record-state').addEventListener('click',()=>{if(saved.records.length>=30){toast('記録は30件までです。CSVを保存してから記録を消してください。');return;}saved.records.push({...state});persist();renderRecords();$('record-status').textContent=`条件 ${saved.records.length} を記録しました。下の実験ノートで比較できます。`;toast(`条件 ${saved.records.length} を実験ノートに記録しました。`);});
+  $('record-state').addEventListener('click',()=>{if(saved.records.length>=30){toast('記録は30件までです。CSVを保存してから記録を消してください。');return;}saved.records.push({...state});persist();renderRecords();$('record-status').textContent=`条件 ${saved.records.length} を記録しました。`;toast(`条件 ${saved.records.length} を記録しました。`);});
   $('clear-records').addEventListener('click',()=>{saved.records=[];persist();renderRecords();$('record-status').textContent='記録を消しました。';});
   $('download-csv').addEventListener('click',()=>{const rows=[['条件','位置の標準偏差 Δx/L','運動量の標準偏差 Δpₓ/(ℏ/L)','運動量の中心 p₀/(ℏ/L)','位相の曲がり C','不確定性の積 ΔxΔpₓ/ℏ']];saved.records.forEach((s,i)=>{const sp=P.momentumSD(s.sigma,s.chirp);rows.push([i+1,s.sigma,sp,s.mean,s.chirp,s.sigma*sp]);});const blob=new Blob(['\uFEFF'+rows.map(r=>r.join(',')).join('\r\n')],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='量子力学Ⅰ_第4回_実験記録.csv';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),5000);});
   function updateHistogram(){
@@ -102,20 +92,20 @@
     $('clear-sample-pin').hidden=!samplePin;
     $('sample-pin-status').hidden=!samplePin;
     document.querySelectorAll('.sample-pin-key').forEach(e=>e.hidden=!samplePin);
-    if(samplePin)$('sample-pin-status').textContent=`破線：Δx = ${fmt(samplePin.state.sigma)}、Δpₓ = ${fmt(P.momentumSD(samplePin.state.sigma,samplePin.state.chirp))} ／ 各 ${samplePin.x.length.toLocaleString('ja-JP')} 回の測定結果`;
+    if(samplePin)$('sample-pin-status').textContent=`破線：Δx = ${fmt(samplePin.state.sigma)}、Δpₓ = ${fmt(P.momentumSD(samplePin.state.sigma,samplePin.state.chirp))} ／ ${samplePin.x.length.toLocaleString('ja-JP')}回`;
 
     ['sample-one','sample-ten','sample-hundred','sample-thousand'].forEach(id=>$(id).disabled=revealed);
     document.querySelectorAll('[data-measure-count]').forEach(b=>b.disabled=revealed);
     document.querySelectorAll('.theory-key').forEach(e=>e.hidden=!revealed);
     $('reveal-note').classList.toggle('revealed',revealed);
-    $('reveal-note').textContent=revealed?'10,000回：理論の正規分布を表示中。':'各10,000回で理論の正規分布を表示。';
+    $('reveal-note').textContent=revealed?'理論曲線を表示中':'10,000回で理論曲線を表示';
     drawHistogram('x',revealed);drawHistogram('p',revealed);
   }
   function drawHistogram(quantity,revealed){
     const values=samples[quantity],isX=quantity==='x',sd=isX?state.sigma:P.momentumSD(state.sigma,state.chirp),mean=isX?0:state.mean;
     const n=values.length,summary=P.stats(values),color=isX?'#8d9aff':'#ff8e96',fill=isX?'#5863aa':'#a95765';
-    $('sample-last-'+quantity).textContent=n?`直近の値：${fmt(values[n-1],3)}`:'まだ測定していません';
-    const theory=$('theory-sd-'+quantity);theory.textContent=revealed?fmt(sd,3):'10,000回で表示';theory.classList.toggle('awaiting-theory',!revealed);
+    $('sample-last-'+quantity).textContent=n?`直近：${fmt(values[n-1],3)}`:'未測定';
+    const theory=$('theory-sd-'+quantity);theory.textContent=revealed?fmt(sd,3):'—';theory.classList.toggle('awaiting-theory',!revealed);
     $('sample-sd-'+quantity).textContent=summary.sd===null?'—':fmt(summary.sd,3);
     $('sample-mean-'+quantity).textContent=summary.mean===null?'—':fmt(summary.mean,3);
     const svg=$('histogram-'+quantity);svg.replaceChildren();
@@ -126,7 +116,7 @@
     const X=x=>left+(x-min)/(max-min)*(w-left-right),Y=y=>base-Math.min(y,ymax)/ymax*(base-top);
     add(svg,'title',{},`${isX?'位置':'運動量'}を${n}回測定。標本標準偏差 ${summary.sd===null?'未計算':fmt(summary.sd,3)}。${revealed?'理論の正規分布を表示。':'理論の曲線は10,000回で表示。'}`);
     for(let j=0;j<=4;j++){const y=j*.5;add(svg,'line',{x1:left,x2:w-right,y1:Y(y),y2:Y(y),stroke:'#3a3e48','stroke-width':'.8'});add(svg,'text',{x:left-7,y:Y(y)+3,fill:'#b5bac6','font-size':'10','text-anchor':'end'},fmt(y,2));}
-    add(svg,'text',{x:left,y:12,fill:'#b5bac6','font-size':'10'},'確率密度（尺度は固定）');
+    add(svg,'text',{x:left,y:12,fill:'#b5bac6','font-size':'10'},'確率密度');
     for(let x=-8;x<=8;x+=2)add(svg,'text',{x:X(x),y:base+18,fill:'#b5bac6','font-size':'11','text-anchor':'middle'},x);
     densities.forEach((v,i)=>{if(v>0)add(svg,'rect',{x:X(min+i*histogram.width)+1,y:Y(v),width:(w-left-right)/48-2,height:base-Y(v),fill,rx:'1'});});
     densities.forEach((v,i)=>{if(v>ymax){const x=X(min+(i+.5)*histogram.width);add(svg,'path',{d:`M${x-4},${top+6}L${x},${top}L${x+4},${top+6}Z`,fill:color,'data-overflow':'true'});}});
@@ -141,10 +131,11 @@
     if(n===1&&values[0]>=min&&values[0]<=max)add(svg,'circle',{cx:X(values[0]),cy:base+3,r:4,fill:color});
     if(!n)add(svg,'text',{x:(w+left-right)/2,y:base/2,fill:'#b5bac6','font-size':'12','text-anchor':'middle'},'測定結果');
     add(svg,'text',{x:(w+left-right)/2,y:h-3,fill:'#b5bac6','font-size':'11','text-anchor':'middle'},isX?'位置 x / L':'運動量 pₓ / (ℏ/L)');
-    let message=n===0?'測定結果はありません。':n<30?'少数の測定では、大きな揺らぎがあります。':n<1000?'測定回数を増やし、分布の変化を比較してください。':revealed?'線は、この状態から計算した理論の正規分布です。':'10,000回で理論曲線を表示します。';
-    if(densities.some(v=>v>ymax))message+=' ▲は縦軸の上限を超えた棒です。';
-    if(n)message+=` 表示範囲外：${histogram.outside}回（統計には含めます）。`;
-    $('sample-message-'+quantity).textContent=message;
+    const notes=[];
+    if(densities.some(v=>v>ymax))notes.push('▲ 縦軸の上限を超える値');
+    if(histogram.outside)notes.push(`範囲外：${histogram.outside}回`);
+    $('sample-message-'+quantity).textContent=notes.join(' ／ ');
+    $('sample-message-'+quantity).hidden=!notes.length;
   }
   function measure(count){
     const total=Math.min(count,10000-samples.x.length),sp=P.momentumSD(state.sigma,state.chirp);
@@ -154,10 +145,10 @@
   }
   $('sample-one').addEventListener('click',()=>measure(1));$('sample-ten').addEventListener('click',()=>measure(10));$('sample-hundred').addEventListener('click',()=>measure(100));$('sample-thousand').addEventListener('click',()=>measure(1000));
   document.querySelectorAll('[data-measure-count]').forEach(button=>button.addEventListener('click',()=>measure(+button.dataset.measureCount)));
-  $('reset-samples').addEventListener('click',()=>{samples={x:[],p:[]};updateHistogram();toast('両方の測定結果と理論の線をリセットしました。');});
-  $('pin-samples').addEventListener('click',()=>{samplePin={state:{...state},x:[...samples.x],p:[...samples.p]};updateHistogram();toast('測定結果を破線で残しました。Δx を変え、同じ回数測って比べてください。');});
+  $('reset-samples').addEventListener('click',()=>{samples={x:[],p:[]};updateHistogram();toast('測定をリセットしました。');});
+  $('pin-samples').addEventListener('click',()=>{samplePin={state:{...state},x:[...samples.x],p:[...samples.p]};updateHistogram();toast('測定結果を比較用に残しました。');});
   $('clear-sample-pin').addEventListener('click',()=>{samplePin=null;updateHistogram();});
   if('IntersectionObserver' in window){new IntersectionObserver(entries=>{const entry=entries[0];$('mobile-dock').hidden=!entry.isIntersecting;},{threshold:0.1}).observe(document.querySelector('.graph-panel'));new IntersectionObserver(entries=>{$('measure-dock').hidden=!entries[0].isIntersecting;},{threshold:0.05}).observe(document.querySelector('.histogram-grid'));}
   let resizeTimer;window.addEventListener('resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>{if(!$('view-explore').hidden)updateState(false);else updateHistogram();},100);});
-  updateState(false);renderRecords();renderPrediction();view(location.hash.slice(1)||'explore',false);
+  updateState(false);renderRecords();view(location.hash.slice(1)||'explore',false);
 })();
