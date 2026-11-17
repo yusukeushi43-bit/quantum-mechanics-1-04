@@ -81,3 +81,31 @@ main{padding-bottom:100px}.hero{padding-top:36px}.main-nav button{align-items:ce
 .histogram-grid .hist-legend{font-size:12px}.histogram-grid .sample-stat-grid span{font-size:12px}.histogram-grid .pill{font-size:11px}.histogram-grid .sample-stat-grid strong.awaiting-theory{font:24px var(--sans);margin-top:8px}
 .notebook{margin-top:24px;padding:0 24px}.notebook>summary{cursor:pointer;padding:18px 0;font-size:15px}.notebook-content{padding-bottom:24px}.notebook-actions{display:flex;align-items:center;gap:18px}.notebook .records{padding:20px 0;border:0;background:none;margin:0}.notebook .feedback:empty{display:none}.memo-label{display:block;font-size:14px;margin:14px 0 10px}.notebook textarea{width:100%}.quiz-settings{align-items:end}.question{padding-top:16px}#quiz-explanation p{font-size:14px}
 @media(max-width:850px){.hero{padding-top:26px}.main-nav button{min-height:62px}.main-nav button .nav-name{font-size:20px}.measurement-guide{padding:16px 20px;font-size:15px}.notebook{padding:0 18px}.notebook-actions{align-items:flex-start;flex-direction:column;gap:8px}.measurement-comparison{justify-content:flex-start}.histogram-grid .hist-legend{font-size:11px}.histogram-grid .sample-stat-grid span{font-size:11px}.quiz-settings{align-items:stretch}}
+
+/* On phones, compare both histograms in the same compact frame. */
+.sample-stat-grid>.stats-quantity{display:none}
+@media(max-width:850px){
+ .histogram-grid{display:flex;flex-direction:column;gap:0;padding:17px 16px 12px;background:var(--dark);border:1px solid #42454e;border-radius:var(--radius)}
+ .histogram-grid .histogram-panel{display:contents}
+ .histogram-grid .control-heading{margin:0;min-height:28px;gap:8px;flex-wrap:nowrap}
+ .histogram-grid .control-heading h3{font-size:14px;font-weight:500}
+ .histogram-grid .measurement-word{display:none}
+ .histogram-grid .pill{font-size:10px;padding:2px 8px;border:0}
+ .histogram-grid .hist-legend{font-size:10px;margin:0 0 10px;min-height:0;gap:5px 12px;color:var(--muted)}
+ .position-hist>.hist-legend{order:0}.position-hist>.hist-legend .bar-key{background:#9399a7}
+ .position-hist>.control-heading{order:1}.position-hist>svg{order:2}.position-hist>.sample-message{order:3}
+ .momentum-hist>.control-heading{order:4;border-top:1px solid #ffffff16;padding-top:10px;margin-top:6px}
+ .momentum-hist>.hist-legend{display:none}.momentum-hist>svg{order:5}.momentum-hist>.sample-message{order:6}
+ .histogram-grid .histogram-panel>svg{min-height:0;margin:0}
+ .histogram-grid .sample-message{font-size:10px;margin:0 0 4px;line-height:1.4}
+ .position-hist>.sample-stat-grid{order:7}.momentum-hist>.sample-stat-grid{order:8}
+ .histogram-grid .sample-stat-grid{grid-template-columns:48px repeat(3,minmax(0,1fr));align-items:center;gap:5px;padding:10px 0 0;margin:8px 0 0;border-top:1px solid #ffffff16}
+ .histogram-grid .sample-stat-grid .stats-quantity{display:block;font-size:12px;color:var(--quantity)}
+ .histogram-grid .sample-stat-grid>div{min-width:0;text-align:center}
+ .histogram-grid .sample-stat-grid span{font-size:10px;white-space:nowrap}
+ .histogram-grid .sample-stat-grid strong,.histogram-grid .sample-stat-grid strong.awaiting-theory{font-size:17px;margin-top:2px;line-height:1.4}
+ .measure-dock:not([hidden]){display:grid;grid-template-columns:57px minmax(0,1fr);gap:7px;align-items:center;padding:8px}
+ .measure-dock>span{font-size:10px;margin:0;line-height:1.45}
+ .measure-dock button{font-size:12px;min-height:42px}
+ .measure-dock.complete{display:none!important}
+}

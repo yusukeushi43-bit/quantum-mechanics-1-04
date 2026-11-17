@@ -87,6 +87,7 @@
     const n=samples.x.length,revealed=n>=10000;
     $('sample-count').replaceChildren(document.createTextNode(n.toLocaleString('ja-JP')),Object.assign(document.createElement('small'),{textContent:' / 10,000 回'}));
     $('dock-count').textContent=`各 ${n.toLocaleString('ja-JP')} 回`;
+    $('measure-dock').classList.toggle('complete',revealed);
     $('sample-progress').value=n;
     $('pin-samples').disabled=n<2;
     $('clear-sample-pin').hidden=!samplePin;
@@ -109,7 +110,7 @@
     $('sample-sd-'+quantity).textContent=summary.sd===null?'—':fmt(summary.sd,3);
     $('sample-mean-'+quantity).textContent=summary.mean===null?'—':fmt(summary.mean,3);
     const svg=$('histogram-'+quantity);svg.replaceChildren();
-    const w=Math.max(280,svg.getBoundingClientRect().width||500),h=w<400?280:330,left=40,right=18,top=25,base=h-38,max=8,min=-8;
+    const w=Math.max(280,svg.getBoundingClientRect().width||500),compact=matchMedia('(max-width:850px)').matches,h=compact?190:330,left=40,right=18,top=25,base=h-38,max=8,min=-8;
     svg.setAttribute('viewBox',`0 0 ${w} ${h}`);svg.style.aspectRatio=`${w}/${h}`;
     const histogram=P.bins(values,min,max,48),densities=histogram.bins.map(v=>n?v/(n*histogram.width):0);
     const ymax=2.2;

@@ -7,9 +7,9 @@
   <meta name="description" content="量子力学Ⅰ 第4回。不確定性原理の分布・仮想測定・確認クイズ。">
   <title>量子力学Ⅰ 第4回｜不確定性原理</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%2324252a'/%3E%3Cpath d='M8 39 Q20 39 26 24 Q32 9 38 24 Q44 39 56 39' fill='none' stroke='%238d9aff' stroke-width='4'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="style.css?v=20261118-3">
+  <link rel="stylesheet" href="style.css?v=20261118-4">
   <script src="physics.js" defer></script>
-  <script src="app.js?v=20261118-3" defer></script>
+  <script src="app.js?v=20261118-4" defer></script>
   <script src="quiz-config.js?v=20261118-2" defer></script>
   <script src="quiz.js?v=20261118-3" defer></script>
 </head>
@@ -85,18 +85,18 @@
     <p id="sample-pin-status" class="comparison-caption" hidden></p>
     <div class="histogram-grid">
       <article class="panel histogram-panel position-hist">
-        <div class="control-heading"><h3><i class="color-dot x"></i> 位置の測定結果</h3><span class="pill" id="sample-last-x">未測定</span></div>
+        <div class="control-heading"><h3><i class="color-dot x"></i> 位置<span class="measurement-word">の測定結果</span></h3><span class="pill" id="sample-last-x">未測定</span></div>
         <div class="hist-legend"><span><i class="bar-key"></i> 測定結果</span><span class="theory-key" hidden>─ 理論曲線</span><span class="sample-pin-key" hidden>┄ 前の測定結果</span></div>
         <svg id="histogram-x" viewBox="0 0 700 290" role="img" aria-label="位置の測定結果のヒストグラム"></svg>
         <p id="sample-message-x" class="sample-message" hidden></p>
-        <div class="sample-stat-grid"><div><span>平均</span><strong id="sample-mean-x">—</strong></div><div><span>広がり sₓ</span><strong id="sample-sd-x">—</strong></div><div><span>理論値 Δx</span><strong id="theory-sd-x" class="awaiting-theory">10,000回で表示</strong></div></div>
+        <div class="sample-stat-grid"><span class="stats-quantity">位置</span><div><span>平均</span><strong id="sample-mean-x">—</strong></div><div><span>広がり sₓ</span><strong id="sample-sd-x">—</strong></div><div><span>理論値 Δx</span><strong id="theory-sd-x" class="awaiting-theory">10,000回で表示</strong></div></div>
       </article>
       <article class="panel histogram-panel momentum-hist">
-        <div class="control-heading"><h3><i class="color-dot p"></i> 運動量の測定結果</h3><span class="pill" id="sample-last-p">未測定</span></div>
+        <div class="control-heading"><h3><i class="color-dot p"></i> 運動量<span class="measurement-word">の測定結果</span></h3><span class="pill" id="sample-last-p">未測定</span></div>
         <div class="hist-legend"><span><i class="bar-key"></i> 測定結果</span><span class="theory-key" hidden>─ 理論曲線</span><span class="sample-pin-key" hidden>┄ 前の測定結果</span></div>
         <svg id="histogram-p" viewBox="0 0 700 290" role="img" aria-label="運動量の測定結果のヒストグラム"></svg>
         <p id="sample-message-p" class="sample-message" hidden></p>
-        <div class="sample-stat-grid"><div><span>平均</span><strong id="sample-mean-p">—</strong></div><div><span>広がり sₚ</span><strong id="sample-sd-p">—</strong></div><div><span>理論値 Δpₓ</span><strong id="theory-sd-p" class="awaiting-theory">10,000回で表示</strong></div></div>
+        <div class="sample-stat-grid"><span class="stats-quantity">運動量</span><div><span>平均</span><strong id="sample-mean-p">—</strong></div><div><span>広がり sₚ</span><strong id="sample-sd-p">—</strong></div><div><span>理論値 Δpₓ</span><strong id="theory-sd-p" class="awaiting-theory">10,000回で表示</strong></div></div>
       </article>
     </div>
   </div>
