@@ -7,13 +7,15 @@
   stored.profiles=Array.isArray(stored.profiles)?stored.profiles.filter(p=>p&&typeof p.name==='string'&&isID(p.participant)):[];
   const save=()=>{try{localStorage.setItem(key,JSON.stringify(stored));}catch(_){}};
   let classCode=config.defaultClass||'QM1-04',activePhase=null,activeName='',participant=stored.participant,ready=false,checking=false,accepting=false,busy=false,notice='',noticeError=false;
+  let submissionRevision=0;
+  const timings=['before','after'];
   const phase=()=>activePhase||'before',answers=()=>['q1','q2','q3'].map(name=>form.elements[name].value);
   const currentKey=()=>classCode+'/'+participant+'/'+phase();
   const normalizeName=value=>value.trim().replace(/\s+/g,' ');
   function clearFeedback(){result.hidden=true;result.replaceChildren();form.querySelectorAll('.answer-correct,.answer-incorrect').forEach(e=>e.classList.remove('answer-correct','answer-incorrect'));}
   function validFeedback(f){return f&&Array.isArray(f.answers)&&Array.isArray(f.correctAnswers)&&f.answers.length===3&&f.correctAnswers.length===3&&[...f.answers,...f.correctAnswers].every(a=>['a','b','c'].includes(a))&&Number.isInteger(f.score)&&f.score===f.answers.filter((a,i)=>a===f.correctAnswers[i]).length&&Array.isArray(f.explanations)&&f.explanations.length===3&&f.explanations.every(s=>typeof s==='string'&&s.length<=300);}
   function showFeedback(feedback){
-    clearFeedback();if(!ready||activePhase!=='after'||!validFeedback(feedback))return;
+    clearFeedback();if(!ready||activePhase!=='after'||!activeName||normalizeName(nameInput.value)!==activeName||!validFeedback(feedback))return;
     const heading=document.createElement('h3');heading.textContent=`3問中 ${feedback.score}問正解`;result.append(heading);
     const list=document.createElement('ol');list.className='result-list';
     feedback.answers.forEach((answer,i)=>{
@@ -61,34 +63,75 @@
     let profile=stored.profiles.find(p=>p.name===name);
     if(!profile){profile={name,participant:stored.profiles.length?uuid():stored.participant};stored.profiles.push(profile);}
     activeName=name;participant=profile.participant;stored.lastName=name;nameInput.value=name;
-    for(const timing of ['before','after']){
+    let hasSavedResponse=false;
+    for(const timing of timings){
       const old=classCode+'/'+timing,next=classCode+'/'+participant+'/'+timing;
       if(participant===stored.participant){
         if(stored.drafts[old]&&!stored.drafts[next])stored.drafts[next]=stored.drafts[old];
         if(stored.receipts[old]&&!stored.receipts[next])stored.receipts[next]=stored.receipts[old];
       }
+      hasSavedResponse ||= Boolean(stored.receipts[next]||stored.submitted[next]);
     }
     if(unassigned&&unassigned.some(Boolean)&&!stored.drafts[currentKey()])stored.drafts[currentKey()]=unassigned;
+    const wasReady=ready;
+    if(hasSavedResponse)ready=false;
     notice='';noticeError=false;save();render();
+    if(wasReady)refresh();
   }
   nameInput.value=typeof stored.lastName==='string'?stored.lastName:'';activateName();
   nameInput.addEventListener('change',activateName);
   nameInput.addEventListener('input',()=>{nameInput.setCustomValidity('');clearFeedback();});
   form.addEventListener('change',e=>{if(/^q[123]$/.test(e.target.name)){stored.drafts[currentKey()]=answers();save();clearFeedback();notice='';noticeError=false;updateControls();}});
+  function reconcileSavedAnswers(saved){
+    const prefix=classCode+'/'+participant+'/';
+    let changed=false;
+    let pending;
+    try{pending=JSON.parse(stored.pending?.signature);}catch(_){}
+    for(const timing of timings){
+      const responseKey=prefix+timing;
+      if(saved[timing]||!(stored.receipts[responseKey]||stored.submitted[responseKey]))continue;
+      for(const records of [stored.receipts,stored.drafts,stored.submitted]){
+        delete records[responseKey];
+        if(participant===stored.participant)delete records[classCode+'/'+timing];
+      }
+      if(pending?.classCode===classCode&&pending.participant===participant&&pending.phase===timing)stored.pending=null;
+      changed=true;
+    }
+    const after=stored.submitted[prefix+'after'];
+    if(!saved.before&&Number.isInteger(after?.beforeScore)){
+      after.beforeScore=null;
+      changed=true;
+    }
+    if(changed)save();
+    return changed;
+  }
   async function refresh(){
     if(checking||busy)return;checking=true;if(!ready)updateControls();
+    const requestedParticipant=activeName?participant:null,requestedRevision=submissionRevision;
+    const stale=()=>requestedParticipant!==(activeName?participant:null)||requestedRevision!==submissionRevision;
     const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),15000);
     try{
-      const response=await fetch(config.endpoint,{credentials:'omit',redirect:'follow',cache:'no-store',signal:controller.signal});
+      const request={credentials:'omit',redirect:'follow',cache:'no-store',signal:controller.signal};
+      if(requestedParticipant){
+        request.method='POST';
+        request.headers={'Content-Type':'text/plain;charset=utf-8'};
+        request.body=JSON.stringify({action:'status',version:3,participant:requestedParticipant});
+      }
+      const response=await fetch(config.endpoint,request);
       const settings=await response.json();
       if(!response.ok||settings.version!==3||typeof settings.classCode!=='string'||!/^[A-Z0-9_-]{1,32}$/.test(settings.classCode)||![null,'before','after'].includes(settings.phase))throw new Error('configuration');
-      if(busy)return;
+      if(requestedParticipant&&!timings.every(timing=>typeof settings.saved?.[timing]==='boolean'))throw new Error('response status');
+      if(busy||stale())return;
       const changed=classCode!==settings.classCode||activePhase!==settings.phase,wasReady=ready,wasAccepting=accepting;
       classCode=settings.classCode;activePhase=settings.phase;accepting=settings.accepting===true&&activePhase!==null;ready=true;
-      if(changed||!wasReady||wasAccepting!==accepting){notice='';noticeError=false;render();}
+      const reset=requestedParticipant&&reconcileSavedAnswers(settings.saved);
+      if(reset||changed||!wasReady||wasAccepting!==accepting){notice='';noticeError=false;render();}
     }catch(_){
-      if(!busy){ready=false;accepting=false;clearFeedback();notice='受付状況を確認できませんでした。もう一度お試しください。';noticeError=true;}
-    }finally{clearTimeout(timeout);checking=false;if(!busy)updateControls();}
+      if(!busy&&!stale()){ready=false;accepting=false;clearFeedback();notice='受付状況を確認できませんでした。もう一度お試しください。';noticeError=true;}
+    }finally{
+      clearTimeout(timeout);checking=false;
+      if(!busy){updateControls();if(stale())refresh();}
+    }
   }
   button.addEventListener('click',()=>{if(!ready&&!checking)refresh();});
   form.addEventListener('submit',async e=>{
@@ -98,7 +141,7 @@
     const payload={version:3,classCode,name:activeName,participant,phase:activePhase,answers:answers()},submissionKey=currentKey();
     const signature=JSON.stringify(payload);
     if(!stored.pending||stored.pending.signature!==signature)stored.pending={signature,id:uuid()};
-    payload.submission=stored.pending.id;save();clearFeedback();busy=true;notice='';noticeError=false;updateControls();
+    payload.submission=stored.pending.id;save();clearFeedback();submissionRevision++;busy=true;notice='';noticeError=false;updateControls();
     const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),30000);let refreshNeeded=false;
     try{
       const response=await fetch(config.endpoint,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload),credentials:'omit',redirect:'follow',signal:controller.signal});
