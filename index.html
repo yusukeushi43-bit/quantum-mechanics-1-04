@@ -7,11 +7,11 @@
   <meta name="description" content="量子力学Ⅰ 第4回。不確定性原理の分布・仮想測定・確認クイズ。">
   <title>量子力学Ⅰ 第4回｜不確定性原理</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%2324252a'/%3E%3Cpath d='M8 39 Q20 39 26 24 Q32 9 38 24 Q44 39 56 39' fill='none' stroke='%238d9aff' stroke-width='4'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="style.css?v=20261118-4">
+  <link rel="stylesheet" href="style.css?v=20261118-5">
   <script src="physics.js" defer></script>
   <script src="app.js?v=20261118-4" defer></script>
   <script src="quiz-config.js?v=20261118-2" defer></script>
-  <script src="quiz.js?v=20261118-3" defer></script>
+  <script src="quiz.js?v=20261118-5" defer></script>
 </head>
 <body>
 <a class="skip" href="#main">本文へ移動</a>
@@ -105,13 +105,13 @@
 <section id="view-quiz" class="view wrap" aria-label="確認クイズ" hidden>
   <div class="section-title"><div><h2>確認クイズ</h2></div><span class="pill">3問</span></div>
   <form id="class-quiz" class="class-quiz">
-    <div class="quiz-settings panel"><label>授業コード<input id="class-code" name="classCode" maxlength="32" pattern="[A-Za-z0-9_-]{1,32}" value="QM1-04" required autocomplete="off"></label><fieldset class="phase-selector"><legend class="sr-only">回答するタイミング</legend><label><input type="radio" name="phase" value="before" checked>実験前</label><label><input type="radio" name="phase" value="after">実験後</label></fieldset></div>
+    <div class="quiz-settings panel"><label for="student-name">名前<input type="text" id="student-name" name="studentName" maxlength="60" required autocomplete="name" placeholder="名前を入力"></label><fieldset class="phase-selector"><legend class="sr-only">回答するタイミング</legend><label><input type="radio" name="phase" value="before" checked>実験前</label><label><input type="radio" name="phase" value="after">実験後</label></fieldset></div>
     <fieldset class="question panel"><legend><span>01</span>C = 0 で Δx を半分にすると、Δpₓ は？</legend><label><input type="radio" name="q1" value="a" required><span>半分になる</span></label><label><input type="radio" name="q1" value="b"><span>変わらない</span></label><label><input type="radio" name="q1" value="c"><span>2倍になる</span></label></fieldset>
     <fieldset class="question panel"><legend><span>02</span>同じ状態の粒子を、より多く測定すると？</legend><label><input type="radio" name="q2" value="a" required><span>測定回数に応じて小さくなる</span></label><label><input type="radio" name="q2" value="b"><span>広がりは変わらず、分布の形がはっきりしてくる</span></label><label><input type="radio" name="q2" value="c"><span>十分に測れば、すべて同じ値になる</span></label></fieldset>
     <fieldset class="question panel"><legend><span>03</span>運動量の正規分布が広がると、山の高さは？</legend><label><input type="radio" name="q3" value="a" required><span>山は低くなり、分布全体の面積は変わらない</span></label><label><input type="radio" name="q3" value="b"><span>山の高さも、分布全体の面積も大きくなる</span></label><label><input type="radio" name="q3" value="c"><span>山の高さは変わらず、分布全体の面積が大きくなる</span></label></fieldset>
     <div class="quiz-submit"><button id="submit-quiz" type="submit" class="button primary">回答を送信する</button><p id="submission-status" role="status" aria-live="polite"></p></div>
   </form>
-  <section id="quiz-explanation" class="panel" hidden><h3>解説</h3><p><strong>01：2倍。</strong>C = 0 では ΔxΔpₓ = ℏ/2。</p><p><strong>02：広がりは変わりません。</strong>測定回数を増やしても、状態の広がりは一定です。</p><p><strong>03：山は低くなり、面積は一定。</strong>分布全体の面積は1です。</p></section>
+  <section id="quiz-explanation" class="panel" aria-label="クイズの結果" tabindex="-1" hidden></section>
 </section>
 
 </main>
