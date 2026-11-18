@@ -111,7 +111,9 @@ main{padding-bottom:100px}.hero{padding-top:36px}.main-nav button{align-items:ce
 }
 
 #student-name{font:16px var(--sans);min-height:46px}.quiz-settings>label{max-width:320px;flex:1}
-.question>label.answer-correct{border-color:var(--x);background:#262e49}.question>label.answer-incorrect{border-color:var(--p);background:#3d272e}
+.question>label.answer-correct{border-color:var(--x);background:#262e49}.question>label.answer-incorrect,.question>label.answer-incorrect:has(input:checked){border-color:var(--p);background:#542d38;color:#ffc2cc}.question>label.answer-incorrect input{accent-color:var(--p)}
 .question>label.answer-correct::after{content:'○';color:var(--x);margin-left:auto;font-size:20px}.question>label.answer-incorrect::after{content:'×';color:var(--p);margin-left:auto;font-size:20px}
 #quiz-explanation{scroll-margin-top:100px}#quiz-explanation>h3{font-size:24px}.result-list{list-style:none;padding:0;margin:20px 0 0}.result-list>li{padding:18px 0;border-top:1px solid var(--line)}.result-list>li:last-child{padding-bottom:0}.result-list strong{font-size:16px}.result-correct strong{color:var(--x)}.result-incorrect strong{color:var(--p)}#quiz-explanation .result-list p{margin-top:7px;color:var(--ink);font-size:14px}#quiz-explanation .chosen-answer{color:var(--muted)}
 @media(max-width:850px){.quiz-settings>label{max-width:none}#quiz-explanation{padding:20px}.result-list strong{font-size:15px}#quiz-explanation>h3{font-size:22px}}
+#quiz-explanation .result-incorrect .chosen-answer{color:var(--p);font-weight:600}
+.quiz-progress{margin-top:24px;padding:20px;border:1px solid #6f7dbc;border-radius:12px;background:#262e49;overflow-wrap:anywhere}.quiz-progress strong{font-size:16px;line-height:1.8;font-weight:600}#quiz-explanation .quiz-progress p{margin-top:8px;color:var(--ink);font-size:15px;font-variant-numeric:tabular-nums}

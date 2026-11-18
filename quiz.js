@@ -25,7 +25,16 @@
       const solution=document.createElement('p');solution.textContent='正解：'+choice(feedback.correctAnswers[i]).querySelector('span').textContent;item.append(solution);
       const explanation=document.createElement('p');explanation.textContent=feedback.explanations[i];item.append(explanation);list.append(item);
     });
-    result.append(list);result.hidden=false;
+    result.append(list);
+    const beforeScore=feedback.beforeScore;
+    if(Number.isInteger(beforeScore)&&beforeScore>=0&&beforeScore<feedback.score){
+      const progress=document.createElement('div'),message=document.createElement('strong'),rates=document.createElement('p');
+      progress.className='quiz-progress';
+      message.textContent=`${activeName}さん、実験前より正答率が上がりました！`;
+      rates.textContent=`実験前 ${Math.round(beforeScore/3*100)}% → 実験後 ${Math.round(feedback.score/3*100)}%`;
+      progress.append(message,rates);result.append(progress);
+    }
+    result.hidden=false;
   }
   function updateControls(){
     title.textContent=activePhase==='before'?'実験前クイズ':activePhase==='after'?'実験後クイズ':'確認クイズ';

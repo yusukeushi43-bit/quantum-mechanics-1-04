@@ -7,11 +7,11 @@
   <meta name="description" content="量子力学Ⅰ 第4回。不確定性原理の分布・仮想測定・確認クイズ。">
   <title>量子力学Ⅰ 第4回｜不確定性原理</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%2324252a'/%3E%3Cpath d='M8 39 Q20 39 26 24 Q32 9 38 24 Q44 39 56 39' fill='none' stroke='%238d9aff' stroke-width='4'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="style.css?v=20261118-5">
+  <link rel="stylesheet" href="style.css?v=20261118-9">
   <script src="physics.js" defer></script>
-  <script src="app.js?v=20261118-4" defer></script>
+  <script src="app.js?v=20261118-9" defer></script>
   <script src="quiz-config.js?v=20261118-2" defer></script>
-  <script src="quiz.js?v=20261118-8" defer></script>
+  <script src="quiz.js?v=20261118-9" defer></script>
 </head>
 <body>
 <a class="skip" href="#main">本文へ移動</a>
@@ -22,12 +22,24 @@
 </section>
 
 <nav class="main-nav" aria-label="画面を切り替える">
-    <button data-view="explore" class="active" aria-current="page"><span class="nav-icon" aria-hidden="true">∿</span><span class="nav-name">分布</span></button>
+    <button data-view="quiz" class="active" aria-current="page"><span class="nav-icon" aria-hidden="true">?</span><span class="nav-name">クイズ</span></button>
+    <button data-view="explore"><span class="nav-icon" aria-hidden="true">∿</span><span class="nav-name">分布</span></button>
     <button data-view="measure"><span class="nav-icon" aria-hidden="true">▥</span><span class="nav-name">測定</span></button>
-    <button data-view="quiz"><span class="nav-icon" aria-hidden="true">?</span><span class="nav-name">クイズ</span></button>
   </nav>
 
-<section id="view-explore" class="view wrap" aria-label="分布をさわる">
+<section id="view-quiz" class="view wrap" aria-label="確認クイズ">
+  <div class="section-title"><div><h2 id="quiz-title">確認クイズ</h2></div><span class="pill">3問</span></div>
+  <form id="class-quiz" class="class-quiz">
+    <div class="quiz-settings panel"><label for="student-name">名前<input type="text" id="student-name" name="studentName" maxlength="60" required autocomplete="name" placeholder="名前を入力"></label></div>
+    <fieldset class="question panel"><legend><span>01</span>Δx を半分にすると、Δpₓ は？</legend><label><input type="radio" name="q1" value="a" required><span>半分になる</span></label><label><input type="radio" name="q1" value="b"><span>変わらない</span></label><label><input type="radio" name="q1" value="c"><span>2倍になる</span></label></fieldset>
+    <fieldset class="question panel"><legend><span>02</span>同じ状態の粒子をより多く測定すると、測定値の分布はどうなる？</legend><label><input type="radio" name="q2" value="a" required><span>分布の広がりが小さくなる</span></label><label><input type="radio" name="q2" value="b"><span>広がりは変わらず、分布の形がはっきりしてくる</span></label><label><input type="radio" name="q2" value="c"><span>十分に測れば、すべて同じ値になる</span></label></fieldset>
+    <fieldset class="question panel"><legend><span>03</span>運動量の正規分布が広がると、山の高さは？</legend><label><input type="radio" name="q3" value="a" required><span>山は低くなり、分布全体の面積は変わらない</span></label><label><input type="radio" name="q3" value="b"><span>山の高さも、分布全体の面積も大きくなる</span></label><label><input type="radio" name="q3" value="c"><span>山の高さは変わらず、分布全体の面積が大きくなる</span></label></fieldset>
+    <div class="quiz-submit"><button id="submit-quiz" type="submit" class="button primary">回答を送信する</button><p id="submission-status" role="status" aria-live="polite"></p></div>
+  </form>
+  <section id="quiz-explanation" class="panel" aria-label="クイズの結果" tabindex="-1" hidden></section>
+</section>
+
+<section id="view-explore" class="view wrap" aria-label="分布をさわる" hidden>
   <div class="section-title"><div><h2>位置と運動量の分布</h2></div></div>
   <div class="lab-layout">
     <aside class="controls panel">
@@ -102,17 +114,7 @@
   </div>
 </section>
 
-<section id="view-quiz" class="view wrap" aria-label="確認クイズ" hidden>
-  <div class="section-title"><div><h2 id="quiz-title">確認クイズ</h2></div><span class="pill">3問</span></div>
-  <form id="class-quiz" class="class-quiz">
-    <div class="quiz-settings panel"><label for="student-name">名前<input type="text" id="student-name" name="studentName" maxlength="60" required autocomplete="name" placeholder="名前を入力"></label></div>
-    <fieldset class="question panel"><legend><span>01</span>Δx を半分にすると、Δpₓ は？</legend><label><input type="radio" name="q1" value="a" required><span>半分になる</span></label><label><input type="radio" name="q1" value="b"><span>変わらない</span></label><label><input type="radio" name="q1" value="c"><span>2倍になる</span></label></fieldset>
-    <fieldset class="question panel"><legend><span>02</span>同じ状態の粒子をより多く測定すると、測定値の分布はどうなる？</legend><label><input type="radio" name="q2" value="a" required><span>分布の広がりが小さくなる</span></label><label><input type="radio" name="q2" value="b"><span>広がりは変わらず、分布の形がはっきりしてくる</span></label><label><input type="radio" name="q2" value="c"><span>十分に測れば、すべて同じ値になる</span></label></fieldset>
-    <fieldset class="question panel"><legend><span>03</span>運動量の正規分布が広がると、山の高さは？</legend><label><input type="radio" name="q3" value="a" required><span>山は低くなり、分布全体の面積は変わらない</span></label><label><input type="radio" name="q3" value="b"><span>山の高さも、分布全体の面積も大きくなる</span></label><label><input type="radio" name="q3" value="c"><span>山の高さは変わらず、分布全体の面積が大きくなる</span></label></fieldset>
-    <div class="quiz-submit"><button id="submit-quiz" type="submit" class="button primary">回答を送信する</button><p id="submission-status" role="status" aria-live="polite"></p></div>
-  </form>
-  <section id="quiz-explanation" class="panel" aria-label="クイズの結果" tabindex="-1" hidden></section>
-</section>
+
 
 </main>
 <div class="mobile-dock" id="mobile-dock" hidden><label for="mobile-sigma">位置の広がり Δx<output id="mobile-output" for="mobile-sigma">1.00</output></label><input id="mobile-sigma" type="range" min="0.35" max="2.5" step="0.01" value="1" aria-label="位置の広がりを調整"></div>

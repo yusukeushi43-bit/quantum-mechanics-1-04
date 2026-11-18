@@ -63,7 +63,7 @@
   $('pin-state').addEventListener('click',()=>{pin={...state};updateState(false);toast('分布を比較用に残しました。');});
   $('clear-pin').addEventListener('click',()=>{pin=null;updateState(false);});
   function view(name,scroll=true){
-    if(!['explore','measure','quiz'].includes(name))name='explore';
+    if(!['explore','measure','quiz'].includes(name))name='quiz';
     document.querySelectorAll('.view').forEach(e=>e.hidden=e.id!=='view-'+name);
     document.querySelectorAll('.main-nav [data-view]').forEach(b=>{const active=b.dataset.view===name;b.classList.toggle('active',active);if(active)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});
     try {history.replaceState(null,'','#'+name);}catch(_){}
@@ -151,5 +151,5 @@
   $('clear-sample-pin').addEventListener('click',()=>{samplePin=null;updateHistogram();});
   if('IntersectionObserver' in window){new IntersectionObserver(entries=>{const entry=entries[0];$('mobile-dock').hidden=!entry.isIntersecting;},{threshold:0.1}).observe(document.querySelector('.graph-panel'));new IntersectionObserver(entries=>{$('measure-dock').hidden=!entries[0].isIntersecting;},{threshold:0.05}).observe(document.querySelector('.histogram-grid'));}
   let resizeTimer;window.addEventListener('resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>{if(!$('view-explore').hidden)updateState(false);else updateHistogram();},100);});
-  updateState(false);renderRecords();view(location.hash.slice(1)||'explore',false);
+  updateState(false);renderRecords();view(location.hash.slice(1)||'quiz',false);
 })();
