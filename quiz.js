@@ -10,7 +10,7 @@
   const phase=()=>form.elements.phase.value,answers=()=>['q1','q2','q3'].map(name=>form.elements[name].value);
   const currentKey=()=>classCode+'/'+participant+'/'+phase();
   const normalizeName=value=>value.trim().replace(/\s+/g,' ');
-  const explanations=['C = 0 では ΔxΔpₓ = ℏ/2。','測定回数を増やしても、状態の広がりは一定です。','分布全体の面積が1なので、広がるほど山は低くなります。'];
+  const explanations=['他の設定が同じなら、Δx と Δpₓ の積は一定です。','測定回数を増やしても、状態の広がりは一定です。','分布全体の面積が1なので、広がるほど山は低くなります。'];
   function clearFeedback(){result.hidden=true;result.replaceChildren();form.querySelectorAll('.answer-correct,.answer-incorrect').forEach(e=>e.classList.remove('answer-correct','answer-incorrect'));}
   function validFeedback(f){return f&&Array.isArray(f.answers)&&Array.isArray(f.correctAnswers)&&f.answers.length===3&&f.correctAnswers.length===3&&[...f.answers,...f.correctAnswers].every(a=>['a','b','c'].includes(a))&&Number.isInteger(f.score)&&f.score===f.answers.filter((a,i)=>a===f.correctAnswers[i]).length;}
   function showFeedback(feedback){

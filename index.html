@@ -11,7 +11,7 @@
   <script src="physics.js" defer></script>
   <script src="app.js?v=20261118-4" defer></script>
   <script src="quiz-config.js?v=20261118-2" defer></script>
-  <script src="quiz.js?v=20261118-5" defer></script>
+  <script src="quiz.js?v=20261118-6" defer></script>
 </head>
 <body>
 <a class="skip" href="#main">本文へ移動</a>
@@ -106,7 +106,7 @@
   <div class="section-title"><div><h2>確認クイズ</h2></div><span class="pill">3問</span></div>
   <form id="class-quiz" class="class-quiz">
     <div class="quiz-settings panel"><label for="student-name">名前<input type="text" id="student-name" name="studentName" maxlength="60" required autocomplete="name" placeholder="名前を入力"></label><fieldset class="phase-selector"><legend class="sr-only">回答するタイミング</legend><label><input type="radio" name="phase" value="before" checked>実験前</label><label><input type="radio" name="phase" value="after">実験後</label></fieldset></div>
-    <fieldset class="question panel"><legend><span>01</span>C = 0 で Δx を半分にすると、Δpₓ は？</legend><label><input type="radio" name="q1" value="a" required><span>半分になる</span></label><label><input type="radio" name="q1" value="b"><span>変わらない</span></label><label><input type="radio" name="q1" value="c"><span>2倍になる</span></label></fieldset>
+    <fieldset class="question panel"><legend><span>01</span>Δx を半分にすると、Δpₓ は？</legend><label><input type="radio" name="q1" value="a" required><span>半分になる</span></label><label><input type="radio" name="q1" value="b"><span>変わらない</span></label><label><input type="radio" name="q1" value="c"><span>2倍になる</span></label></fieldset>
     <fieldset class="question panel"><legend><span>02</span>同じ状態の粒子を、より多く測定すると？</legend><label><input type="radio" name="q2" value="a" required><span>測定回数に応じて小さくなる</span></label><label><input type="radio" name="q2" value="b"><span>広がりは変わらず、分布の形がはっきりしてくる</span></label><label><input type="radio" name="q2" value="c"><span>十分に測れば、すべて同じ値になる</span></label></fieldset>
     <fieldset class="question panel"><legend><span>03</span>運動量の正規分布が広がると、山の高さは？</legend><label><input type="radio" name="q3" value="a" required><span>山は低くなり、分布全体の面積は変わらない</span></label><label><input type="radio" name="q3" value="b"><span>山の高さも、分布全体の面積も大きくなる</span></label><label><input type="radio" name="q3" value="c"><span>山の高さは変わらず、分布全体の面積が大きくなる</span></label></fieldset>
     <div class="quiz-submit"><button id="submit-quiz" type="submit" class="button primary">回答を送信する</button><p id="submission-status" role="status" aria-live="polite"></p></div>
